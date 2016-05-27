@@ -1,0 +1,108 @@
+// Misc helper, prevent text highlighting
+.unselectable {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+// Alignment helpers - name collisions shouldn't cause issues
+.text-left      { text-align: left    !important; }
+.text-center    { text-align: center  !important; }
+.text-right     { text-align: right   !important; }
+.text-justify   { text-align: justify !important; }
+
+// 12 Col Grid - Based on 100% sizing - inspired by bootstrap - made minimal
+.tbl-xs-1, .tbl-xs-2, .tbl-xs-3, .tbl-xs-4, .tbl-xs-5, .tbl-xs-6, .tbl-xs-7, .tbl-xs-8, .tbl-xs-9, .tbl-xs-10, .tbl-xs-11, .tbl-xs-12 {
+  display: inline-block;
+  box-sizing: border-box;
+}
+.tbl-xs-1 {width:   8.3333%;}
+.tbl-xs-2 {width:  16.6666%;}
+.tbl-xs-3 {width:  24.9999%;}
+.tbl-xs-4 {width:  33.3332%;}
+.tbl-xs-5 {width:  41.6665%;}
+.tbl-xs-6 {width:  49.9998%;}
+.tbl-xs-7 {width:  58.3331%;}
+.tbl-xs-8 {width:  66.6664%;}
+.tbl-xs-9 {width:  74.9997%;}
+.tbl-xs-10 {width: 83.3331%;}
+.tbl-xs-11 {width: 91.6663%;}
+.tbl-xs-12 {width: 99.9996%;}
+
+// Actual PowerTable component CSS
+.power-table {
+  width: 100%;
+  border-collapse: collapse;
+  tr {
+    .unselectable;
+    display: inline-block;
+    width: 100%;
+  }
+  thead {
+    display: block;
+    position: relative;
+    width: 100%;
+    th {
+      /* dgrid-ish */
+      background: #f2f2f2;
+      color: #626262;
+      border: 0;
+      border-bottom: 1px solid #AAA;
+
+      display: inline-block;
+      font-weight: 900;
+      font-size: 1.31em;
+      padding: 6px 0;
+      cursor: pointer;
+      max-height: 35px;
+      overflow: hidden;
+    }
+  }
+  tbody {
+    border-color: rgb(221, 221, 221);
+    border-style: solid;
+    border-width: 0px 0px 0px 1px;
+    padding: 6px 3px;
+    max-height: 35px;
+    overflow-y: hidden;
+
+    display: block;
+    overflow-y: scroll;
+    height: 250px;
+    width: 100%;
+    td {
+      display: inline-block;
+      text-align: left;
+      margin: 0;
+    }
+
+    .row-odd { background-color: #ececec !important; }
+
+    tr {
+      cursor: pointer;
+      width: 100%;
+      display: inline-block;
+      transition: background-color 0.2s ease-out;
+
+      &.disabled {
+        text-decoration: line-through !important;
+        cursor: none;
+        input[type="checkbox"] {
+          display: none;
+          -ms-user-select: none;
+          -moz-user-select: none;
+          -webkit-user-select: none;
+        }
+      }
+      &:hover .name { font-style: italic; }
+      &.selected {
+        background-color: #B0B0B0 !important;
+        font-weight: 700;
+        .name { padding-left: 4px; font-weight: 700; }
+      }
+    }
+
+  }
+
+}
