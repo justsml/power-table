@@ -5,21 +5,24 @@ Plugins are functions which return discrete objects with the following structure
 ```js
 {
   name: 'selectable',
+  mixins: {
+    // mixins may add any functions to the main `Table` instance
+    isSelected,
+    select,
+    unselect,
+    toggleSelect
+  },
   handlers: {
-    preRender:        fn('preRender'),
-    rowBefore:        fn('rowBefore'),
-    rowAfter:         fn('rowAfter'),
-    cellBefore:       fn('cellBefore'),
-    cellAfter:        fn('cellAfter'),
-    headerColumn:     fn('headerColumn'),
-    headersRendered:  fn('headersRendered'),
+    // handler functions are passed {elem, data, column, rowIndex}
+    preRender:          fn('preRender'),
+    postRender:         fn('postRender'),
+    preRow:             fn('preRow'),
+    postRow:            fn('postRow'),
+    preCell:            fn('preCell'),
+    postCell:           fn('postCell'),
+    preHeaderField:     fn('preHeaderField'),
+    postHeader:         fn('postHeader'),
 
-    rowBefore:      fn(elem, data, column, rowIndex),
-    rowAfter:       fn(elem, data, column, rowIndex),
-    cellBefore:     fn(elem, data, column, rowIndex),
-    cellAfter:      fn(elem, data, column, rowIndex),
-    headerColumn:   fn(elem, data, column, rowIndex),
-    headersAdded:   fn(elem, data, column, rowIndex),
 
   },
 
