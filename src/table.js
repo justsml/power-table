@@ -10,18 +10,10 @@ function Table(el, config) {
 
   config = Config(config);
 
-  function _loadPlugins() {
-    // 'unpacks'/runs plugins
-    const plugins = !config.plugins ? config.plugins.map(p => p()) : []
-    // extend ctx with plugin.mixins
-    plugins.map(p => typeof p.mixins === 'object' ? Object.assign(ctx, p.mixins) : ctx)
-    // Add `hooks` & `plugins` to return object
-    Object.assign(ctx, {plugins, 'hooks': PluginHooks({plugins})})
-    hooks = ctx.hooks
-  }
   function _resetLayout() {
     table = document.createElement('table')
     table.classList.add('power-table')
+    Object.assign(ctx, {table})
     // empty contents
     el.children.forEach(child => el.removeChild(child))
     el.appendChild(table)
@@ -36,6 +28,15 @@ function Table(el, config) {
       css.innerHTML = styles
       document.head.appendChild(css)
     }
+  }
+  function _loadPlugins() {
+    // 'unpacks'/runs plugins
+    const plugins = !config.plugins ? config.plugins.map(p => p(ctx)) : []
+    // extend ctx with plugin.mixins
+    plugins.map(p => typeof p.mixins === 'object' ? Object.assign(ctx, p.mixins) : ctx)
+    // Add `hooks` & `plugins` to return object
+    Object.assign(ctx, {plugins, 'hooks': PluginHooks({plugins})})
+    hooks = ctx.hooks
   }
   function _render() {
     renderTableHead(ctx)

@@ -20,3 +20,4 @@ export function removeAll(_this) {
   _this.toArray().forEach(function(el) {el.parentNode && el.parentNode.removeChild(el)});
 }
 
+export function getId({id, _id}) { return id || _id; }
