@@ -10,12 +10,15 @@ function Table(el, config) {
 
   config = Config(config);
 
+  Object.assign(ctx, config);
+
   function _resetLayout() {
     table = document.createElement('table')
     table.classList.add('power-table')
     Object.assign(ctx, {table})
     // empty contents
-    el.children.forEach(child => el.removeChild(child))
+    el.innerHTML = '';
+    // Array.from(el.children).forEach(child => el.removeChild(child))
     el.appendChild(table)
     return table
   }
@@ -39,6 +42,7 @@ function Table(el, config) {
     hooks = ctx.hooks
   }
   function _render() {
+
     renderTableHead(ctx)
       .then(thead => {
         table.appendChild(thead)
@@ -50,7 +54,6 @@ function Table(el, config) {
         table.appendChild(tbody)
         hooks.postRender({elem: table})
       })
-
   }
   function init() {
     _injectStyles();

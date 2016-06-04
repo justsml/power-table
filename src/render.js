@@ -6,7 +6,7 @@ function renderTableHead({columns, hooks}) {
   const tr       = columns.reduce((tr, c) => {
     let elem = document.createElement('th');
     hooks.preHeaderField({elem, column: c})
-    elem.classList.add.apply(elem, c.classes);
+    elem.classList.add(...c.classes);
     elem.innerHTML = c.title;
     elem.render    = c.render;
     elem.opts      = c.opts;
@@ -33,7 +33,7 @@ function renderTableBody({data, columns, hooks}) {
       const tblRow = columns.reduce((tr, column) => {
         const elem = document.createElement('td')
         tr.appendChild(elem)
-        elem.classList.add.apply(elem, column.classes)
+        elem.classList.add(...column.classes)
         elem.innerHTML = typeof column.render === 'function' ? column.render({row, elem, column}) : row[column.key]
         hooks.postCell({elem, column, rowIndex, data: row})
         return tr

@@ -10,13 +10,17 @@
   },
   "homepage": "https://github.com/justsml/power-table",
   "babel": {
-    "presets": ["es2015"]
+    "presets": [
+      "es2015"
+    ]
   },
   "description": "Yet another Table Data Component. Pure JavaScript, NO jQuery. Features WebPack, Wrappers For React, Angular, Dojo",
   "main": "index.js",
   "scripts": {
     "start": "npm run build && http-server -p 1337",
     "build": "webpack --config ./webpack.config.js",
+    "watch": "webpack --watch --config ./webpack.config.js",
+    "compress": "uglifyjs --compress --mangle --screw-ie8 -o ./dist/power-table.min.js -- ./dist/power-table.bundle.js",
     "test-debug": "casperjs test --verbose --log-level=debug ./tests/e2e-tests.js",
     "test": "casperjs test --verbose ./tests/e2e-tests.js"
   },
