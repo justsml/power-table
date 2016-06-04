@@ -25,7 +25,7 @@ function Table(el, config) {
   function _injectStyles() {
     css = document.querySelector('style#horizontal-table')
     if (!css) {
-      let styles = require("!css!less!../style.less")
+      let styles = require("!css!less!./style.less")
       css = document.createElement('style')
       css.id = 'horizontal-Table'
       css.innerHTML = styles
@@ -34,7 +34,7 @@ function Table(el, config) {
   }
   function _loadPlugins() {
     // 'unpacks'/runs plugins
-    const plugins = !config.plugins ? config.plugins.map(p => p(ctx)) : []
+    const plugins = config.plugins ? config.plugins.map(p => p(ctx)) : []
     // extend ctx with plugin.mixins
     plugins.map(p => typeof p.mixins === 'object' ? Object.assign(ctx, p.mixins) : ctx)
     // Add `hooks` & `plugins` to return object

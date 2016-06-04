@@ -4,9 +4,11 @@ const webpack = require('webpack');
 const plugins = [];
 const env     = process.env.NODE_ENV;
 
-var suffix = '.js';
+var suffix = '.js',
+  devtool = 'inline-source-map';
 
 if (env === 'production') {
+  devtool = undefined;
   suffix = '.min.js';
   plugins.push(new webpack.optimize.UglifyJsPlugin({
     mangle: {
@@ -16,6 +18,7 @@ if (env === 'production') {
 }
 
 module.exports = {
+  devtool: devtool,
   entry: './index.js',
   output: {
     path: __dirname + '/dist',

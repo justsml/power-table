@@ -26,10 +26,12 @@ export function Selectable({table}) {
   }
 
   function _preHeaderField({elem, data, column, rowIndex}) {
-    column.title = `<input id="toggleCheckAll" type="checkbox" title="Check/Uncheck All" value="" />`;
-    column.render = ({elem, column, row}) => {
-      let _getId = column.getId || getId;
-      return `<input type="checkbox" value="${_getId(row)}" ${isSelected(_getId(row)) ? ' checked="checked"' : ''} />`;
+    if (column.selection) {
+      column.title = `<input id="toggleCheckAll" type="checkbox" title="Check/Uncheck All" value="" />`;
+      column.render = ({elem, column, row}) => {
+        let _getId = column.getId || getId;
+        return `<input type="checkbox" value="${_getId(row)}" ${isSelected(_getId(row)) ? ' checked="checked"' : ''} />`;
+      }
     }
     return arguments[0];
   }

@@ -18,6 +18,6 @@ function Column(opts) {
   if (classes.length <= 0) {
     classes.push(`tbl-xs-${cols}`);
   }
-  return {key, title, classes, sort, render};
+  return Object.assign(opts, {key, title, classes, sort, render});
 }
 

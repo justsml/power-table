@@ -6,12 +6,6 @@
   -ms-user-select: none;
 }
 
-// Alignment helpers - name collisions shouldn't cause issues
-.text-left      { text-align: left    !important; }
-.text-center    { text-align: center  !important; }
-.text-right     { text-align: right   !important; }
-.text-justify   { text-align: justify !important; }
-
 // 12 Col Grid - Based on 100% sizing - inspired by bootstrap - made minimal
 .tbl-xs-1, .tbl-xs-2, .tbl-xs-3, .tbl-xs-4, .tbl-xs-5, .tbl-xs-6, .tbl-xs-7, .tbl-xs-8, .tbl-xs-9, .tbl-xs-10, .tbl-xs-11, .tbl-xs-12 {
   display: inline-block;
@@ -64,7 +58,6 @@
     border-style: solid;
     border-width: 0px 0px 0px 1px;
     padding: 6px 3px;
-    max-height: 35px;
     overflow-y: hidden;
 
     display: block;
@@ -105,4 +98,9 @@
 
   }
 
+  // Alignment helpers - name collisions shouldn't cause issues
+  .text-left      { text-align: left    !important; }
+  .text-center    { text-align: center  !important; }
+  .text-right     { text-align: right   !important; }
+  .text-justify   { text-align: justify !important; }
 }
