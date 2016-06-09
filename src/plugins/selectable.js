@@ -1,8 +1,9 @@
 import {getId} from '../util'
 import {events} from '../events'
 
-export function Selectable({table, data}) {
-  const selected        = []
+export function Selectable(ctx) {
+  let {table, data}     = ctx
+  const selected        = ctx.selected || []
   const cleanupHandlers = []
 
   return {
@@ -25,6 +26,7 @@ export function Selectable({table, data}) {
   }
 
   const selectAllToggleClick = (e) => {
+    console.warn('selectAllToggleClick', e.target, e)
     if (e.target.checked) {
       selectAll()
     } else {
@@ -46,7 +48,7 @@ export function Selectable({table, data}) {
   }
 
   function _postRender({elem, data, column, rowIndex}) {
-    let tbody = table.querySelector('tbody');
+    let tbody = table.querySelector('tbody')
     if (!tbody) { throw new Error('No table body found!!!!!') }
     tbody.addEventListener('click', _handleSelect)
     cleanupHandlers.push(() => tbody.removeEventListener('click', _handleSelect))
@@ -54,33 +56,34 @@ export function Selectable({table, data}) {
   }
 
   function _postHeader({elem}) {
-
+    elem = table.querySelector('#toggleCheckAll')
+    console.warn('Setting SelectAll/None Click', elem)
     elem.addEventListener('click', selectAllToggleClick)
     cleanupHandlers.push(() => elem.removeEventListener('click', selectAllToggleClick))
-
+    console.warn('SET SelectAll/None Click', elem)
   }
 
   function _preHeaderField({elem, data, column, rowIndex}) {
     if (column.selection) {
-      column.title = `<input id="toggleCheckAll" type="checkbox" title="Check/Uncheck All" value="" />`;
+      column.title = `<input id="toggleCheckAll" type="checkbox" title="Check/Uncheck All" value="" />`
       column.render = ({elem, column, row}) => {
-        let _getId = column.getId || getId;
-        return `<input type="checkbox" value="${_getId(row)}" ${isSelected(_getId(row)) ? ' checked="checked"' : ''} />`;
+        let _getId = column.getId || getId
+        return `<input type="checkbox" class="select-item" value="${_getId(row)}" ${isSelected(_getId(row)) ? ' checked="checked"' : ''} />`
       }
     }
-    return arguments[0];
+    return arguments[0]
   }
 
   function selectAll() {
-    Array.from(table.querySelectorAll('.selection-col [type="checkbox"]'))
-      .map(function(el) {return el.value;})
-      .map(selectItem(true))
+    Array.from(table.querySelectorAll('input.select-item[type="checkbox"]'))
+      .map(function(el) {return el.value})
+      .map(selectItem.bind(null, true))
   }
 
   function selectNone() {
-    Array.from(table.querySelectorAll('.selection-col [type="checkbox"]'))
+    Array.from(table.querySelectorAll('input.select-item[type="checkbox"]'))
       .map(function(el) {return el.value})
-      .map(selectItem(false))
+      .map(selectItem.bind(null, false))
   }
 
   function selectItem(id, bool) {
@@ -109,6 +112,7 @@ export function Selectable({table, data}) {
       }
     }
 
+    ctx.selected = selected
     // setStatusTotals(users.length, selected.length)
     table.dispatchEvent(events.createStatusEvent({selected, data}))
     table.dispatchEvent(events.createSelectEvent({selected}))

@@ -43,7 +43,9 @@ export function Sortable(ctx) {
   }
 
   function _columnClicked(e) {
-    e.preventDefault()
+    console.trace('SORTABLE._columnClicked', e)
+
+    // e.preventDefault()
     let el = e.target
     el = el.matches('th') ? el : (el.closest && el.closest('th') || el)
     let clickedSort = el.getAttribute('sort')
@@ -63,6 +65,7 @@ export function Sortable(ctx) {
   }
 
   function _preRender({data}) {
+    console.trace('SORTABLE._preRender', data)
     const dataSorter = (data, sortKey) => data.sort(getSorter(sortKey))
 
     if (!sortBy || sortBy.length <= 0) { return {data} }
@@ -75,6 +78,7 @@ export function Sortable(ctx) {
   }
 
   function _postHeader({elem, data, column, rowIndex}) {
+    console.trace('SORTABLE._postHeader', elem)
     let thead = elem //elem.querySelector('thead')
     if (!thead) { throw new Error('No table head found!!!!!') }
     thead.addEventListener('click', _columnClicked)

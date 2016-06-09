@@ -83,6 +83,7 @@ export function Table(el, config) {
     renderTableHead(ctx)
       .then(thead => {
         table.appendChild(thead)
+        console.trace('TABLE.postHeader', thead)
         hooks.postHeader({'elem': thead})
       })
 
@@ -93,6 +94,10 @@ export function Table(el, config) {
       })
   }
   function _customEvents() {
+    table.addEventListener(events.createSortedEvent.eventName, ({detail}) => {
+      console.trace('TABLE.EVENTS.SORTED', detail)
+    })
+
     table.addEventListener(events.createRenderEvent.eventName, e => {
       console.group('render')
       console.warn(`Table CustEvent Fired: ${events.createRenderEvent.eventName}`, e.detail)
@@ -118,8 +123,8 @@ export function Table(el, config) {
   }
   function destroy() {
     hooks.destroy(Object.assign({'elem': table}, ctx))
-    if (css)   { css.parentNode.removeChild(css)     }
-    if (table) { table.parentNode.removeChild(table) }
+    if (css && css.parentNode)     { css.parentNode.removeChild(css) }
+    if (table && table.parentNode) { table.parentNode.removeChild(table) }
     return ctx
   }
 

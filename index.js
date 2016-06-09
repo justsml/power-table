@@ -9,7 +9,7 @@ export function Table(elem, config) {
 
   // default plugins
   config.plugins.push(Sortable)
-  // config.plugins.push(Selectable)
+  config.plugins.push(Selectable)
 
   return T(elem, config)
 }
