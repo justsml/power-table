@@ -1,10 +1,32 @@
 import {Config} from './config'
-import {renderTableHead, renderTableBody} from './render'
 import {PluginHooks} from './plugins'
+import {renderTableHead, renderTableBody} from './render'
+import {events} from './events'
 
-export {Table}
-
-function Table(el, config) {
+/**
+ * Table class - start here.
+ *
+ * ```js
+ * let powerTable = Table(document.querySelector('#user-table'), {
+ *   columns: [
+ *     {title: 'Col #1', render: 'column_1', sort: 'column_1', cols: 3},
+ *     {title: 'Col #2', render: 'column_2', sort: 'column_2', cols: 3},
+ *   ],
+ *   data: [
+ *     {column_1: 'row 1 - col 1', column_2: 'row 1 - col 2'},
+ *     {column_1: 'row 2 - col 1', column_2: 'row 2 - col 2'},
+ *     {column_1: 'row 3 - col 1', column_2: 'row 3 - col 2'},
+ *   ],
+ *   plugins: null,
+ *   debug: false
+ * })
+ * // Added a PowerTable to `document.querySelector('#user-table')`
+ * ```
+ *
+ * @param  {Element} el - Wrapper/root element
+ * @param  {object} config - Define plugins in here, see tests/examples
+ */
+export function Table(el, config) {
   let table, css, hooks
   const ctx = { destroy } // Plain object `ctx` will be returned - use Object.assign to extend
 
@@ -15,18 +37,16 @@ function Table(el, config) {
     table = document.createElement('table')
     table.classList.add('power-table')
     Object.assign(ctx, {table})
-    // empty contents
-    el.innerHTML = ''
-    // Array.from(el.children).forEach(child => el.removeChild(child))
+    el.innerHTML = '' // empty contents
     el.appendChild(table)
     return table
   }
   function _injectStyles() {
-    css = document.querySelector('style#horizontal-table')
+    css = document.querySelector('style#power-table')
     if (!css) {
-      const styles = require('!css!less!./style.less')
-      css = document.createElement('style')
-      css.id = 'horizontal-Table'
+      const styles  = require('!css!less!./style.less')
+      css           = document.createElement('style')
+      css.id        = 'power-Table'
       css.innerHTML = styles
       document.head.appendChild(css)
     }
@@ -52,8 +72,8 @@ function Table(el, config) {
     Object.assign(ctx, {plugins, 'hooks': PluginHooks({plugins})})
     hooks = ctx.hooks
   }
-  function _render() {
 
+  function _render() {
     hooks.preRender(Object.assign({'elem': table}, ctx))
 
     renderTableHead(ctx)
@@ -68,9 +88,20 @@ function Table(el, config) {
         hooks.postRender({'elem': table})
       })
   }
+  function _customEvents() {
+    table.addEventListener(events.createRenderEvent.eventName, e => {
+      console.warn(`Table CustEvent Fired: ${events.createRenderEvent.eventName}`, e)
+      let {data} = e.details;
+      ctx.data = data;
+      console.warn(`Table CustEvent render: BEFORE ${events.createRenderEvent.eventName}`, data)
+      destroy()
+      init()
+    })
+  }
   function init() {
     _injectStyles()
     _resetLayout()
+    _customEvents()
     _loadPlugins()
     _render()
     return ctx
@@ -81,6 +112,7 @@ function Table(el, config) {
     if (table) { table.parentNode.removeChild(table) }
     return ctx
   }
+
   return init()
 }
 

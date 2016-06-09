@@ -1,6 +1,8 @@
 import {getSorter, createElem, toArray, removeAll} from '../util'
+import {events} from '../events'
 
-export function Sortable({table}) {
+export function Sortable({table, config}) {
+  const cleanupHandlers = []
   let sortBy = '';
 
   return {
@@ -9,6 +11,7 @@ export function Sortable({table}) {
       sortByColumn,
     },
     handlers: {
+      destroy:        _destroy,
       preRender:      _preRender,
       postHeader:     _postHeader,
       preHeaderField: _preHeaderField,
@@ -21,6 +24,11 @@ export function Sortable({table}) {
     let clickedSort = el.getAttribute('sort')
     sortBy = clickedSort === sortBy ? '-'.concat(clickedSort) : clickedSort
     updateView()
+  }
+
+  function triggerRender(data) {
+    var refreshEvent = events.createRenderEvent({data, table})
+    table.dispatchEvent(refreshEvent)
   }
 
   function updateView() {
@@ -38,6 +46,10 @@ export function Sortable({table}) {
     }
   }
 
+  function _destroy() {
+    return cleanupHandlers.map(rm => rm()) // should be sparse array w/ length === # of cleanup method calls
+  }
+
   function _preRender({data}) {
     const dataSorter = (data, sortKey) => data.sort(getSorter(sortKey))
 
@@ -52,17 +64,19 @@ export function Sortable({table}) {
 
   function _postHeader({elem, data, column, rowIndex}) {
     elem.addEventListener('click', _columnClicked)
-    return arguments[0];
+    return arguments[0]
   }
 
   function sortByColumn(_sortBy) {
-    sortBy = _sortBy;
+    sortBy = _sortBy
+    triggerRender()
+
   }
 
 
   function _preHeaderField({elem, data, column, rowIndex}) {
-    elem.setAttribute('sort', column.sort);
-    return arguments[0];
+    elem.setAttribute('sort', column.sort)
+    return arguments[0]
   }
 
 }
