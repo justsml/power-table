@@ -1,9 +1,10 @@
 import {getSorter, createElem, toArray, removeAll} from '../util'
 import {events} from '../events'
 
-export function Sortable({table, config}) {
+export function Sortable(ctx) {
+  let {table, defaultSort} = ctx;
   const cleanupHandlers = []
-  let sortBy = '';
+  let sortBy = defaultSort || '';
 
   return {
     name: 'sortable',
@@ -13,26 +14,13 @@ export function Sortable({table, config}) {
     handlers: {
       destroy:        _destroy,
       preRender:      _preRender,
-      postRender:     _postRender,
+      postHeader:     _postHeader,
       preHeaderField: _preHeaderField,
     },
   }
 
-  const _columnClicked = (e) => {
-    let el = e.target
-    el = el.matches('th') ? el : (el.closest && el.closest('th') || el)
-    let clickedSort = el.getAttribute('sort')
-    console.info('sort clicked?, ELEM: ', el, '\nSORT.REQUESTED:', clickedSort)
-    if (clickedSort) {
-      sortBy = clickedSort === sortBy ? '-'.concat(clickedSort) : clickedSort
-      sortByColumn(sortBy)
-    } else {
-      console.warn('skipping sort, ELEM: ', el, '\nEVENT:', e)
-    }
-  }
-
   function triggerRender(data) {
-    table.dispatchEvent(events.createRenderEvent({data, table}))
+    table.dispatchEvent(events.createRenderEvent({data: (data || ctx.data), table}))
   }
 
   function triggerSorted() {
@@ -54,6 +42,22 @@ export function Sortable({table, config}) {
     }
   }
 
+  function _columnClicked(e) {
+    e.preventDefault()
+    let el = e.target
+    el = el.matches('th') ? el : (el.closest && el.closest('th') || el)
+    let clickedSort = el.getAttribute('sort')
+    console.info('sort clicked?, ELEM: ', el, '\nSORT.REQUESTED:', clickedSort)
+    if (clickedSort) {
+      sortBy = clickedSort === sortBy ? '-'.concat(clickedSort) : clickedSort
+      console.warn('PRE.sortByColumn', sortBy)
+      ctx.defaultSort = sortBy
+      sortByColumn(sortBy)
+    } else {
+      console.warn('skipping sort, ELEM: ', el, '\nEVENT:', e)
+    }
+  }
+
   function _destroy() {
     return cleanupHandlers.map(rm => rm()) // should be sparse array w/ length === # of cleanup method calls
   }
@@ -61,17 +65,17 @@ export function Sortable({table, config}) {
   function _preRender({data}) {
     const dataSorter = (data, sortKey) => data.sort(getSorter(sortKey))
 
-    if (!sortBy || sortBy.length <= 0) { return data; }
+    if (!sortBy || sortBy.length <= 0) { return {data} }
 
-    if (data && typeof data.then === 'function') {
-      return data.then(data => dataSorter(data, sortBy))
-    } else if (data && Array.isArray(data)) {
-      return dataSorter(data, sortBy)
+    if (data && typeof data.then !== 'function') {
+      data = Promise.resolve(data)
     }
+
+    return {data: data.then(data => dataSorter(data, sortBy))}
   }
 
-  function _postRender({elem, data, column, rowIndex}) {
-    let thead = table.querySelector('thead');
+  function _postHeader({elem, data, column, rowIndex}) {
+    let thead = elem //elem.querySelector('thead')
     if (!thead) { throw new Error('No table head found!!!!!') }
     thead.addEventListener('click', _columnClicked)
     cleanupHandlers.push(() => thead.removeEventListener('click', _columnClicked))
@@ -91,7 +95,9 @@ export function Sortable({table, config}) {
   }
 
   function _preHeaderField({elem, data, column, rowIndex}) {
-    elem.setAttribute('sort', column.sort)
+    if (column.sort) {
+      elem.setAttribute('sort', column.sort)
+    }
     return arguments[0]
   }
 

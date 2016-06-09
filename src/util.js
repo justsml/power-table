@@ -8,6 +8,7 @@
  */
 export function toArray(list) {
   list = Array.isArray(list) ? list : this
+  list = !list ? [] : list
   return Array.from && Array.from(list) || ['upgrade your browser, pfft']
 }
 

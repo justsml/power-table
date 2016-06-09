@@ -1,7 +1,11 @@
-import {Config} from './config'
-import {PluginHooks} from './plugins'
+/* Object Factories */
+import {Config}       from './config'
+import {PluginHooks}  from './plugins'
+
+/* Helper utils */
 import {renderTableHead, renderTableBody} from './render'
-import {events} from './events'
+import {events}                           from './events'
+
 
 /**
  * Table class - start here.
@@ -90,12 +94,18 @@ export function Table(el, config) {
   }
   function _customEvents() {
     table.addEventListener(events.createRenderEvent.eventName, e => {
-      console.warn(`Table CustEvent Fired: ${events.createRenderEvent.eventName}`, e)
-      let {data} = e.details;
-      ctx.data = data;
+      console.group('render')
+      console.warn(`Table CustEvent Fired: ${events.createRenderEvent.eventName}`, e.detail)
+      let {data} = e.detail;
       console.warn(`Table CustEvent render: BEFORE ${events.createRenderEvent.eventName}`, data)
+      console.warn(`Table CustEvent render: CURRENT DATA ${events.createRenderEvent.eventName}`, ctx.data)
+      if (data) {
+        ctx.data = data;
+      }
+      console.warn(`Table CustEvent render: AFTER ${events.createRenderEvent.eventName}`, ctx.data)
       destroy()
       init()
+      console.groupEnd('render')
     })
   }
   function init() {
