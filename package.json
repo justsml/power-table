@@ -1,6 +1,6 @@
 {
   "name": "power-table",
-  "version": "1.0.0",
+  "version": "1.1.01",
   "repository": {
     "type": "git",
     "url": "https://github.com/justsml/power-table.git"
@@ -14,7 +14,7 @@
       "es2015"
     ]
   },
-  "description": "Yet another Table Data Component. Pure JavaScript, NO jQuery. Features WebPack, Wrappers For React, Angular, Dojo",
+  "description": "Yet another Table Data Component. Pure JavaScript, NO jQuery. Built w/ WebPack. Wrappers For React, Angular, Dojo coming soon!",
   "main": "index.js",
   "scripts": {
     "start": "npm run build && http-server -p 1337",

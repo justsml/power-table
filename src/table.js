@@ -68,7 +68,7 @@ export function Table(el, config) {
 
       return p
     })
-    // Add `hooks` & `plugins` to return object
+    // ;; // Add `hooks` && `plugins` to return object
     Object.assign(ctx, {plugins, 'hooks': PluginHooks({plugins})})
     hooks = ctx.hooks
   }

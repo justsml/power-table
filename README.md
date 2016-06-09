@@ -6,7 +6,7 @@
 
 ## Vitals
 
-**Size** (gzipped/minified): **4Kb**/10Kb
+**Size** (gzipped/minified): **4Kb**/12Kb
 
 
 ## Summary
@@ -17,7 +17,7 @@
   * Selectable
 1. Universal Javascript
 1. Universal Module - UMD/AMD/CJS
-1. With core css structure embedded
+1. With core css embedded
 1. Easy to style (more examples will be added)
 1. Small, performant and extensible (see plugins folder)
 

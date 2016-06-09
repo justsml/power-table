@@ -18,8 +18,9 @@ export function Selectable({table, data}) {
     },
     handlers: {
       destroy:          _destroy,
-      preHeaderField:   _preHeaderField,
       postRender:       _postRender,
+      postHeader:       _postHeader,
+      preHeaderField:   _preHeaderField,
     },
   }
 
@@ -41,19 +42,26 @@ export function Selectable({table, data}) {
   // }
 
   function _destroy() {
-    return cleanupHandlers.map(rm => rm()) // should be sparse array w/ length === # of cleanup method calls
+    return cleanupHandlers.map(rm => rm()) // should return sparse array w/ length === # of cleanup method calls
   }
 
   function _postRender({elem, data, column, rowIndex}) {
-    elem.addEventListener('click', _handleSelect)
-    cleanupHandlers.push(() => elem.removeEventListener('click', _handleSelect))
+    let tbody = table.querySelector('tbody');
+    if (!tbody) { throw new Error('No table body found!!!!!') }
+    tbody.addEventListener('click', _handleSelect)
+    cleanupHandlers.push(() => tbody.removeEventListener('click', _handleSelect))
     return arguments[0]
+  }
+
+  function _postHeader({elem}) {
+
+    elem.addEventListener('click', selectAllToggleClick)
+    cleanupHandlers.push(() => elem.removeEventListener('click', selectAllToggleClick))
+
   }
 
   function _preHeaderField({elem, data, column, rowIndex}) {
     if (column.selection) {
-      elem.addEventListener('click', selectAllToggleClick)
-      cleanupHandlers.push(() => elem.removeEventListener('click', selectAllToggleClick))
       column.title = `<input id="toggleCheckAll" type="checkbox" title="Check/Uncheck All" value="" />`;
       column.render = ({elem, column, row}) => {
         let _getId = column.getId || getId;

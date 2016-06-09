@@ -10,7 +10,9 @@ function renderTableHead({columns, hooks}) {
     elem.innerHTML = c.title;
     elem.render    = c.render;
     elem.opts      = c.opts;
+    elem.column    = c;
     tr.appendChild(elem);
+    hooks.postHeaderField({elem, column: c})
     return tr;
   }, document.createElement('tr'));
   thead.appendChild(tr);
@@ -27,6 +29,8 @@ function renderTableBody({data, columns, hooks}) {
   }
   return data.then(function(data) {
     const before = hooks.preRender({data})
+    console.error('renderTableBody.preRender.before =', before)
+
     data = Array.isArray(before.data) ? before.data : data || []
     return data.reduce((tbody, row, rowIndex) => {
       const pre = hooks.preRow({elem: tbody, rowIndex, data: row})

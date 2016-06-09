@@ -33,22 +33,36 @@
     <script src='../dist/power-table.bundle.js?cache=not-now'></script>
     <script>
       const data = [
-        { "_id": "552c3bc969702d5d488ba100", "customer_number": "AL0400", "email": "dan@danlevy.net", "name": "AL04 Testing", "region": "Neverland", "type": "lead" },
-        { "_id": "554021d769702d2b6d880101", "customer_number": "AL0400", "email": "dan@danlevy.net", "name": "Allens 1", "region": "Neverland", "type": "lead" },
-        { "_id": "5540221669702d2c12f80401", "customer_number": "AL0400", "email": "dan@danlevy.net", "name": "Allens 2 test", "region": "Neverland", "type": "lead" },
-        { "_id": "552eb5be69702d04d8ca2100", "customer_number": "MM0000", "email": "mike@danlevy.net", "name": "Mike", "region": "Neverland", "type": "lead" },
-        { "_id": "55f0b6ee69702d2e2c3c0600", "customer_number": "danl00", "email": "dan@danlevy.net", "name": "login test", "region": "Neverland", "type": "lead" },
-        { "_id": "560b5cb1fa29440373000563", "customer_number": "ABC123", "email": "jj@danlevy.net", "name": "jj abrams", "region": "Neverland", "type": "lead" },
-        { "_id": "560b5cdffa29440373000564", "customer_number": "123abc", "email": "jj@danlevy.net", "name": "jj test", "region": "Neverland", "type": "admin" }
+        { "_id": "552c3bc969702d5d488ba100", "number": "AL0400", "email": "dan@danlevy.net", "name": "AL04 Testing", "region": "Neverland", "type": "lead" },
+        { "_id": "554021d769702d2b6d880101", "number": "AL0400", "email": "dan@danlevy.net", "name": "Allens 1", "region": "Neverland", "type": "lead" },
+        { "_id": "5540221669702d2c12f80401", "number": "AL0400", "email": "dan@danlevy.net", "name": "Allens 2 test", "region": "Neverland", "type": "admin" },
+        { "_id": "552eb5be69702d04d8ca2100", "number": "MM0000", "email": "mike@danlevy.net", "name": "Mike", "region": "Neverland", "type": "admin" },
+        { "_id": "55f0b6ee69702d2e2c3c0600", "number": "danl00", "email": "dan@danlevy.net", "name": "login test", "region": "Neverland", "type": "admin" },
+        { "_id": "560b5cb1fa29440373000563", "number": "ABC123", "email": "jj@danlevy.net", "name": "jj abrams", "region": "Neverland", "type": "lead" },
+        { "_id": "112c3bc969702d5d488ba100", "number": "AL0400", "email": "dan@danlevy.net", "name": "AL04 Testing", "region": "Neverland", "type": "lead" },
+        { "_id": "114021d769702d2b6d880101", "number": "AL0400", "email": "dan@danlevy.net", "name": "Allens 1", "region": "Neverland", "type": "lead" },
+        { "_id": "1140221669702d2c12f80401", "number": "AL0400", "email": "dan@danlevy.net", "name": "Allens 2 test", "region": "Neverland", "type": "lead" },
+        { "_id": "112eb5be69702d04d8ca2100", "number": "MM0000", "email": "mike@danlevy.net", "name": "Mike", "region": "Neverland", "type": "lead" },
+        { "_id": "11f0b6ee69702d2e2c3c0600", "number": "danl00", "email": "dan@danlevy.net", "name": "login test", "region": "Neverland", "type": "lead" },
+        { "_id": "110b5cb1fa29440373000563", "number": "ABC123", "email": "jj@danlevy.net", "name": "jj abrams", "region": "Neverland", "type": "lead" },
+        { "_id": "222c3bc969702d5d488ba100", "number": "AL0400", "email": "dan@danlevy.net", "name": "AL04 Testing", "region": "Neverland", "type": "lead" },
+        { "_id": "224021d769702d2b6d880101", "number": "AL0400", "email": "dan@danlevy.net", "name": "Allens 1", "region": "Neverland", "type": "lead" },
+        { "_id": "2240221669702d2c12f80401", "number": "AL0400", "email": "dan@danlevy.net", "name": "Allens 2 test", "region": "Neverland", "type": "lead" },
+        { "_id": "222eb5be69702d04d8ca2100", "number": "MM0000", "email": "mike@danlevy.net", "name": "Mike", "region": "Neverland", "type": "lead" },
+        { "_id": "22f0b6ee69702d2e2c3c0600", "number": "danl00", "email": "dan@danlevy.net", "name": "login test", "region": "Neverland", "type": "lead" },
+        { "_id": "220b5cb1fa29440373000563", "number": "ABC123", "email": "jj@danlevy.net", "name": "jj abrams", "region": "Neverland", "type": "lead" },
+        { "_id": "560b5cdffa29440373000564", "number": "123abc", "email": "jj@danlevy.net", "name": "jj test", "region": "Neverland", "type": "admin" }
       ]
 
       var config = {
+        selection: true,
+        sorting: true,
         columns: [
-          {selection: true, multiple: true, toggleAll: true},
-          {title: 'Name', render: 'name'},
-          {title: 'Number', render: 'customer_number'},
+          {selection: true, multiple: true, toggleAll: true, classes: ['text-center', 'tbl-xs-2']},
+          {title: 'Name', render: 'name', cols: 4},
+          {title: 'Number', render: 'number'},
           {title: 'Region', render: 'region'},
-          {title: 'Type', sort: 'type', render: (rec) => rec.type && rec.type.toUpperCase() },
+          {title: 'Type', sort: 'type', render: ({row}) => row.type && row.type.toLowerCase() || 'N/A'},
         ],
         data: Promise.resolve(data)
       };
