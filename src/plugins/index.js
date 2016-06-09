@@ -24,5 +24,6 @@ function PluginHooks({plugins}) {
     postCell:           createHook('postCell'),
     preHeaderField:     createHook('preHeaderField'),
     postHeader:         createHook('postHeader'),
+    destroy:            createHook('destroy'),
   }
 }

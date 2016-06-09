@@ -5,19 +5,18 @@ import {PluginHooks} from './plugins'
 export {Table}
 
 function Table(el, config) {
-  let table, css, hooks;
-  const ctx = { destroy }; // Plain object `ctx` will be returned - use Object.assign to extend
+  let table, css, hooks
+  const ctx = { destroy } // Plain object `ctx` will be returned - use Object.assign to extend
 
-  config = Config(config);
-
-  Object.assign(ctx, config);
+  config = Config(config)
+  Object.assign(ctx, config)
 
   function _resetLayout() {
     table = document.createElement('table')
     table.classList.add('power-table')
     Object.assign(ctx, {table})
     // empty contents
-    el.innerHTML = '';
+    el.innerHTML = ''
     // Array.from(el.children).forEach(child => el.removeChild(child))
     el.appendChild(table)
     return table
@@ -33,41 +32,56 @@ function Table(el, config) {
     }
   }
   function _loadPlugins() {
-    // 'unpacks'/runs plugins
+    // run plugins - 'unpacks' their interfaces
     const plugins = config.plugins ? config.plugins.map(p => p(ctx)) : []
-    // extend ctx with plugin.mixins
-    plugins.map(p => typeof p.mixins === 'object' ? Object.assign(ctx, p.mixins) : ctx)
+    // extend ctx with plugin.mixins methods
+    plugins.map(p => {
+      if (p.name) {
+        ctx[p.name] = ctx[p.name] ? ctx[p.name] : {}
+      } else {
+        throw new Error('Plugin must have a `name` property')
+      }
+
+      if (typeof p.mixins === 'object') {
+        Object.assign(ctx[p.name], p.mixins)
+      }
+
+      return p
+    })
     // Add `hooks` & `plugins` to return object
     Object.assign(ctx, {plugins, 'hooks': PluginHooks({plugins})})
     hooks = ctx.hooks
   }
   function _render() {
 
+    hooks.preRender(Object.assign({'elem': table}, ctx))
+
     renderTableHead(ctx)
       .then(thead => {
         table.appendChild(thead)
-        hooks.postHeader({elem: thead})
+        hooks.postHeader({'elem': thead})
       })
 
     renderTableBody(ctx)
       .then(tbody => {
         table.appendChild(tbody)
-        hooks.postRender({elem: table})
+        hooks.postRender({'elem': table})
       })
   }
   function init() {
-    _injectStyles();
-    _resetLayout();
-    _loadPlugins();
-    _render();
-    return ctx;
+    _injectStyles()
+    _resetLayout()
+    _loadPlugins()
+    _render()
+    return ctx
   }
   function destroy() {
-    if (css)   { css.parentNode.removeChild(css); }
-    if (table) { table.parentNode.removeChild(table); }
-    return ctx;
+    hooks.destroy(Object.assign({'elem': table}, ctx))
+    if (css)   { css.parentNode.removeChild(css)     }
+    if (table) { table.parentNode.removeChild(table) }
+    return ctx
   }
-  return init();
+  return init()
 }
 
 
