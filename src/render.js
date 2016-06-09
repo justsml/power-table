@@ -31,7 +31,7 @@ function renderTableBody({data, columns, hooks}) {
     return data.reduce((tbody, row, rowIndex) => {
       const pre = hooks.preRow({elem: tbody, rowIndex, data: row})
       if (!pre.data) {
-        console.error('plugin skipped row', rowIndex, row)
+        console.info('plugin skipped row', rowIndex, row)
         return tbody
       }
       const tblRow = columns.reduce((tr, column) => {
