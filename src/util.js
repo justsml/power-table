@@ -61,7 +61,6 @@ export const createElem = html => {
   const container = document.createDocumentFragment()
   const div = document.createElement('div')
   div.innerHTML = html // Potential Security Exploit Vector!!!!!!
-  toArray(div.children)
-    .forEach(el => container.appendChild(el))
+  container.appendChild(div)
   return container
 }
