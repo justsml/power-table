@@ -25,7 +25,7 @@ function Table(el, config) {
   function _injectStyles() {
     css = document.querySelector('style#horizontal-table')
     if (!css) {
-      let styles = require("!css!less!./style.less")
+      const styles = require('!css!less!./style.less')
       css = document.createElement('style')
       css.id = 'horizontal-Table'
       css.innerHTML = styles

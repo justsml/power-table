@@ -18,7 +18,8 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build && http-server -p 1337",
-    "build": "webpack --config ./webpack.config.js",
+    "build-dev": "NODE_ENV=development webpack --config ./webpack.config.js",
+    "build": "NODE_ENV=production webpack --config ./webpack.config.js",
     "watch": "webpack --watch --config ./webpack.config.js",
     "compress": "uglifyjs --compress --mangle --screw-ie8 -o ./dist/power-table.min.js -- ./dist/power-table.bundle.js",
     "test-debug": "casperjs test --verbose --log-level=debug ./tests/e2e-tests.js",

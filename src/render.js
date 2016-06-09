@@ -18,6 +18,10 @@ function renderTableHead({columns, hooks}) {
 }
 
 function renderTableBody({data, columns, hooks}) {
+  if (!data) {
+    console.error('Data is null. Try set { data: <Promise|Array> } in PowerTable options')
+    return []
+  }
   if (data && typeof data.then !== 'function') {
     data = Promise.resolve(data || [])
   }

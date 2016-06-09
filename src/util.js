@@ -1,23 +1,66 @@
 
-export function toArray() { return Array.from && Array.from(this) || ['upgrade your browser, pfft']; }
+/**
+ * Utility arrayify method
+ * Add to .prototype of Iterators, ArrayBuffer, Arguments, NodeList, Set/WeakSet, whatever #YOLO
+ *
+ * ... Or just use as util, as needed, #JustDoIt
+ *
+ */
+export function toArray(list) {
+  list = Array.isArray(list) ? list : this
+  return Array.from && Array.from(list) || ['upgrade your browser, pfft']
+}
 
-export function getSorter(name) {
-  if (name[0] === '-') {
-    name = name.substr(1);
-    return function reverseEnglishSort(a, b) {
-      return (a[name] >= b[name] ? -1 : (a[name] < b[name] ? 1 : 0));
-    };
+/**
+ * Get `Array.sort` function for key name comparisons (supports reverse)
+ *
+ * When name === 'email   --- Sort email ascending.
+ *
+ * When name === '-email  --- Sort email descending
+ *
+ * @returns [function] comparer used in `Array.sort()`
+ *
+ */
+export function getSorter(key) {
+  const _englishSort         = (a, b) => (a[key] < b[key] ? -1 : (a[key] > b[key] ? 1 : 0))
+  const _englishSortReversed = (a, b) => (a[key] >= b[key] ? -1 : (a[key] < b[key] ? 1 : 0))
+
+  if (key[0] === '-') {
+    key = key.substr(1);
+    return _englishSortReversed;
   }
-
-  return function englishSort(a, b) {
-    return (a[name] < b[name] ? -1 : (a[name] > b[name] ? 1 : 0));
-  };
+  return _englishSort;
 }
 
-export function removeAll(_this) {
-  if (this instanceof NodeList) { _this = this; }
+/**
+ * Accepts elements from `document.querySelectorAll`
+ *
+ * Removes all children of @node
+ *
+ */
+export function removeAll(node) {
+  if (this instanceof NodeList) { node = this; }
 
-  _this.toArray().forEach(function(el) {el.parentNode && el.parentNode.removeChild(el)});
+  toArray(node)
+    .forEach(el => el.parentNode && el.parentNode.removeChild(el))
+  return node
 }
 
+/**
+ * Totes obvi
+ */
 export function getId({id, _id}) { return id || _id; }
+
+
+/**
+ * Warning: Private/local use only. Do not hoist.
+ * *** Unsafe HTML/string handling ***
+ */
+export const createElem = html => {
+  const container = document.createDocumentFragment()
+  const div = document.createElement('div')
+  div.innerHTML = html // Potential Security Exploit Vector!!!!!!
+  toArray(div.children)
+    .forEach(el => container.appendChild(el))
+  return container
+}

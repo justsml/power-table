@@ -14,7 +14,7 @@ const CAPTURE_FORMAT = {
 casper.options.verbose = true;
 casper.options.viewportSize = { width: VIEWPORT.width, height: VIEWPORT.height };
 
-casper.test.begin('has 2 arrows', 3, function (test) {
+casper.test.begin('has created PowerTable', 3, function (test) {
   // casper.on('complete.error', function(err) {
   //   this.die("Complete callback has failed: " + err);
   // });
