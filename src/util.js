@@ -50,7 +50,7 @@ export function removeAll(node) {
 /**
  * Totes obvi
  */
-export function getId({id, _id}) { return id || _id; }
+export function getId({id, _id, key}) { return id || _id || key; }
 
 
 /**
