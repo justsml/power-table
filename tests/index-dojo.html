@@ -66,10 +66,10 @@
     <script>
       define('scramble/TableWidget', [
         "dojo/_base/declare",
-        "dijit/_WidgetBase",
+        "dijit/_LayoutBase",
         "dijit/_TemplatedMixin",
         // "dojo/text!./templates/SomeWidget.html"
-      ], function(declare, _WidgetBase, _TemplatedMixin) {
+      ], function(declare, _LayoutBase, _TemplatedMixin) {
 
         const config = {
           selection: true,
@@ -85,7 +85,7 @@
           data: Promise.resolve(data)
         };
 
-        return declare([_WidgetBase, _TemplatedMixin], {
+        return declare([_LayoutBase, _TemplatedMixin], {
             templateString: `<div class="power-table-container" data-dojo-type="dijit/layout/BorderContainer"></div>`,
             postCreate: function() {
               this.inherited(arguments);
